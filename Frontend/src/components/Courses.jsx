@@ -1,13 +1,31 @@
 import React from "react";
-import list from "../../public/list.json";
+
+// import list from "../../public/list.json";
 import Cards from "./Cards";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useEffect } from "react";
+import axios from "axios";
 const Courses = () => {
-    const navigate = useNavigate();
-    const handleBack = () => {
-        navigate('/')
-    }
-  console.log(list);
+  const [book, setBook] = useState([]);
+  useEffect(() => {
+    const getBook = async () => {
+      try {
+        const response = await axios.get("http://localhost:3000/book");
+        // console.log(response.data);
+        setBook(response.data);
+      } catch (error) {
+        console.log("Error:", error);
+      }
+    };
+    getBook();
+  }, []);
+
+  const navigate = useNavigate();
+  const handleBack = () => {
+    navigate("/");
+  };
+  // console.log(list);
   return (
     <>
       <div className="max-w-screen-2xl container mx-auto md:px-20 px-4 pt-24">
@@ -25,10 +43,12 @@ const Courses = () => {
             blanditiis velit, voluptates temporibus ipsam at sit repudiandae
             ducimus odit.
           </p>
-          <button className="btn btn-secondary mt-2" onClick={handleBack}>Back</button>
+          <button className="btn btn-secondary mt-2" onClick={handleBack}>
+            Back
+          </button>
         </div>
         <div className="m-12 grid grid-cols-1 md:grid-cols-4 gap-6">
-          {list.map((item) => (
+          {book.map((item) => (
             <Cards item={item} key={item.id} />
           ))}
         </div>
